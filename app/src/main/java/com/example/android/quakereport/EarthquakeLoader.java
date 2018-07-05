@@ -1,4 +1,6 @@
 
+
+
 package com.example.android.quakereport;
 
 import android.content.AsyncTaskLoader;
