@@ -25,7 +25,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-public class EarthquakeActivity extends AppCompatActivity implements LoaderCallbacks<List<Earthquake>> {
+public class EarthquakeActivity extends AppCompatActivity
+        implements LoaderCallbacks<List<Earthquake>>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
+
     private static final String LOG_TAG = EarthquakeActivity.class.getName();
 
     private static final String USGS_REQUEST_URL = "http://earthquake.usgs.gov/fdsnws/event/1/query";
@@ -51,6 +54,9 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
 
         earthquakeListView.setAdapter(mAdapter);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -143,7 +149,26 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if (key.equals(getString(R.string.settings_min_magnitude_key)) ||
+                key.equals(getString(R.string.settings_order_by_key))) {
+
+            mAdapter.clear();
+
+
+            mEmptyStateTextView.setVisibility(View.GONE);
+
+            View loadingIndicator = findViewById(R.id.loading_indicator);
+            loadingIndicator.setVisibility(View.VISIBLE);
+
+
+            getLoaderManager().restartLoader(EARTHQUAKE_LOADER_ID, null, this);
+        }
+    }
 }
+
 
 
 
