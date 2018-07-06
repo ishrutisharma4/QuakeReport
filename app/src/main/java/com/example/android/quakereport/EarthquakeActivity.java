@@ -79,6 +79,8 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
         // Clear the adapter of previous earthquake data
 
+        View loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
         mEmptyStateTextView.setText(R.string.no_earthquakes);
         mAdapter.clear();
 
